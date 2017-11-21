@@ -159,7 +159,7 @@ open class PullToDismiss: NSObject {
     fileprivate func startDragging() {
         targetViewController?.view.layer.removeAllAnimations()
         backgroundView?.layer.removeAllAnimations()
-        viewPositionY = 0.0
+        viewPositionY = UIApplication.shared.statusBarFrame.height
         makeBackgroundView()
         targetViewController?.view.applyEdgeShadow(edgeShadow)
         if haveShadowEffect {

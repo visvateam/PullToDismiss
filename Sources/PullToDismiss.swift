@@ -258,11 +258,9 @@ extension PullToDismiss: UIScrollViewDelegate {
     }
 
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        if(scrollView.contentOffset.y == 0){
-            startDragging()
-            dragging = true
-            previousContentOffsetY = scrollView.contentOffset.y
-        }
+        startDragging()
+        dragging = true
+        previousContentOffsetY = scrollView.contentOffset.y
     }
 
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {

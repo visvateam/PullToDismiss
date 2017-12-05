@@ -36,6 +36,7 @@ open class PullToDismiss: NSObject {
     }
 
     fileprivate var viewPositionY: CGFloat = 0.0
+    fileprivate var safeAreaInsetsTop: CGFloat = 0.0
     fileprivate var dragging: Bool = false
     fileprivate var previousContentOffsetY: CGFloat = 0.0
     fileprivate weak var viewController: UIViewController?
@@ -160,6 +161,9 @@ open class PullToDismiss: NSObject {
         targetViewController?.view.layer.removeAllAnimations()
         backgroundView?.layer.removeAllAnimations()
         viewPositionY = UIApplication.shared.statusBarFrame.height
+        if #available(iOS 11.0, *) {
+            safeAreaInsetsTop = __scrollView?.safeAreaInsets.top ?? 0
+        }
         makeBackgroundView()
         targetViewController?.view.applyEdgeShadow(edgeShadow)
         if haveShadowEffect {
@@ -174,6 +178,14 @@ open class PullToDismiss: NSObject {
             addOffset = min(max(-0.01, addOffset), 0.01)
         }
         viewPositionY += addOffset
+        if #available(iOS 11.0, *) {
+            if let currentSafeAreaInsetsTop = __scrollView?.safeAreaInsets.top {
+                if currentSafeAreaInsetsTop != safeAreaInsetsTop {
+                    viewPositionY += (safeAreaInsetsTop - currentSafeAreaInsetsTop)
+                    safeAreaInsetsTop = currentSafeAreaInsetsTop
+                }
+            }
+        }
         targetViewController?.view.frame.origin.y = max(0.0, viewPositionY)
         if case .some(.targetViewController) = backgroundEffect?.target {
             backgroundView?.frame.origin.y = -(targetViewController?.view.frame.origin.y ?? 0.0)
